@@ -9,6 +9,8 @@ let apiProxy = proxy('/', {
 })
 
 module.exports = {
+  notify: false,
+  files: "**/*.php",
   server: {
     middleware: {
       1: apiProxy
