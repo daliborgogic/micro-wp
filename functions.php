@@ -7,31 +7,41 @@ function dg_scripts() {
     if (DEBUG) {
      wp_register_script('dev', get_template_directory_uri() . '/js/main.js');
      wp_enqueue_script('dev');
+    } else {
+      // ToDo: production
     }
   }
 }
+
+add_action('init', 'dg_scripts');
 
 function dg_styles() {
   if (DEBUG) {
     wp_register_style('dev', get_template_directory_uri() . '/css/style.css');
     wp_enqueue_style('dev');
+  } else {
+    // ToDo: production
   }
 }
+
+add_action('wp_enqueue_scripts', 'dg_styles');
 
 function remove_admin_bar() {
   return false;
 }
+
 add_filter('show_admin_bar', 'remove_admin_bar');
 
-// Remove 'text/css' from our enqueued stylesheet
+// Remove 'text/css' enqueued stylesheet
 function dg_style_remove($tag) {
   return preg_replace('~\s+type=["\'][^"\']++["\']~', '', $tag);
 }
+
 add_filter('style_loader_tag', 'dg_style_remove');
 
 function remove_wp_ver_css_js( $src ) {
-  if ( strpos( $src, 'ver=' . get_bloginfo( 'version' ) ) )
-    $src = remove_query_arg( 'ver', $src );
+  if (strpos($src, 'ver=' . get_bloginfo('version')))
+    $src = remove_query_arg('ver', $src);
   return $src;
 }
 
@@ -49,10 +59,8 @@ function remove_head_scripts() {
   add_action('wp_footer', 'wp_print_head_scripts', 5);
 }
 
-// Actions
-add_action('init', 'dg_scripts');
-add_action('wp_enqueue_scripts', 'dg_styles');
 add_action('wp_enqueue_scripts', 'remove_head_scripts');
+
 // Remove the REST API endpoint.
 remove_action('rest_api_init', 'wp_oembed_register_route');
 // Turn off oEmbed auto discovery.
@@ -67,8 +75,7 @@ remove_action('wp_head', 'rsd_link');
 remove_action('wp_head', 'wp_generator');
 remove_action('wp_head', 'wp_resource_hints', 2);
 remove_action('wp_head', 'rest_output_link_wp_head');
-
-// disable emoji
+// Disable emoji
 remove_action('wp_head', 'print_emoji_detection_script', 7);
 remove_action('wp_print_styles', 'print_emoji_styles');
 
