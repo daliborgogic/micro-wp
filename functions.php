@@ -2,6 +2,13 @@
 
 define('DEBUG', true);
 
+function setup() {
+  add_theme_support('title-tag');
+  add_theme_support('post-thumbnails');
+  add_image_size('featured-image', 2000, 1200, true);
+}
+add_action( 'after_setup_theme', 'setup' );
+
 function dg_scripts() {
   if ($GLOBALS['pagenow'] != 'wp-login.php' && !is_admin()) {
     if (DEBUG) {
